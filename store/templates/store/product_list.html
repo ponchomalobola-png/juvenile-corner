@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Juvenile Corner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% load static %}
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f2f2;
+    }
+
+    .header {
+  background-color: #222e3e;
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .nav a {
+      color: white;
+      margin-left: 15px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .main {
+  display: flex;
+  flex-direction: row-reverse; /* Sidebar on right */
+  gap: 20px; /* ✅ Adds space between sidebar and products */
+flex-wrap: wrap;
+  padding: 20px;
+    }
+
+    .sidebar {
+      width: 100%;
+      max-width: 250px;
+      margin-right: 20px;
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .sidebar h3 {
+      margin-top: 0;
+      font-size: 1.2em;
+      color: #333;
+      text-align: center;
+    }
+
+    .filter-box {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px; /* ✅ Adds space between inputs and button */
+  margin-bottom: 20px;
+}
+
+.filter-form input,
+.filter-form button {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filter-form button {
+  background-color: #0073e6;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.filter-form button:hover {
+  background-color: #005bb5;
+}
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      text-align: center;
+    }
+
+    .sidebar li {
+      margin-bottom: 10px;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #0073e6;
+      font-weight: bold;
+    }
+
+    .products {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      position: relative;
+    }
+
+    .card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .placeholder {
+      background-color: #eee;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 0.9em;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: crimson;
+      color: white;
+      padding: 4px 8px;
+      font-size: 0.75em;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .card h4 {
+      margin: 0;
+      font-size: 1em;
+      color: #333;
+    }
+
+    .card p {
+      margin: 5px 0;
+      font-weight: bold;
+      color: #444;
+    }
+
+    .card button {
+      background-color: #ff9900;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .card button:hover {
+      background-color: #e68a00;
+    }
+
+    .footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+  .main {
+    flex-direction: row-reverse; /* ✅ Still keeps sidebar on the right */
+  }
+
+  .sidebar {
+width: 100%;
+  margin-right: 20px; /* ✅ Adds space between sidebar and product grid */
+  }
+
+  .products {
+width: 100%;
+  padding-right: 20px; /* ✅ Creates breathing room between filters and products */
+  }
+}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">Juvenile Corner</div>
+    <nav class="nav">
+      <a href="#">Home</a>
+      <a href="#">Categories</a>
+      <a href="{% url 'view_cart' %}">Cart</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <aside class="sidebar">
+      <div class="filter-box">
+  <h3>Search & Filter</h3>
+  <form method="GET" class="filter-form">
+    <input type="text" name="q" placeholder="Search..." value="{{ query }}">
+    <input type="number" name="min_price" placeholder="Min Price" value="{{ min_price }}">
+    <input type="number" name="max_price" placeholder="Max Price" value="{{ max_price }}">
+    <button type="submit">Apply</button>
+  </form>
+</div>
+
+<h3>Categories</h3>
+<ul>
+  {% for category in categories %}
+    <li><a href="{% url 'products_by_category' category.id %}">{{ category.name }}</a></li>
+  {% endfor %}
+</ul>
+    </aside>
+
+    <section class="products">
+      {% for product in products %}
+        <div class="card">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+          {% else %}
+            <div class="placeholder">No Image</div>
+          {% endif %}
+
+          {% if product.price < 50 %}
+            <div class="badge">Hot Deal</div>
+          {% elif "new" in product.name|lower %}
+            <div class="badge">New</div>
+          {% elif "exclusive" in product.name|lower %}
+            <div class="badge">Exclusive</div>
+          {% elif "limited" in product.name|lower %}
+            <div class="badge">Limited</div>
+          {% endif %}
+
+          <h4>{{ product.name }}</h4>
+          <p>R{{ product.price }}</p>
+          <a href="{% url 'add_to_cart' product.id %}">
+            <button>Add to Cart</button>
+          </a>
+        </div>
+      {% endfor %}
+    </section>
+  </main>
+
+  <footer class="footer">
+    © 2025 Juvenile Corner. All rights reserved.
+  </footer>
+</body>
+</html>
